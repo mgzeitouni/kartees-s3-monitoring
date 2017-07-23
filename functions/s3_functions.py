@@ -1,11 +1,9 @@
-import boto3
+
 import os
 import datetime
 import pdb
 import smart_open
 from teams import *
-
-s3 = boto3.client('s3')
 
 
 def get_timestamp():
@@ -23,7 +21,7 @@ def get_date_obj():
 
 	return date_object
 
-def get_s3_metadata(sport, season, team):
+def get_s3_metadata(s3, sport, season, team):
 
 	s3_resource = boto3.resource('s3')
 

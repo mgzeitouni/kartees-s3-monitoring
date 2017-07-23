@@ -5,6 +5,7 @@ from functions.teams import *
 import os
 import pdb
 import datetime
+import boto3
 
 app = Flask(__name__)
 
@@ -19,14 +20,17 @@ else:
 	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 
 
-@app.route('/s3')
+@app.route('/get-sizes')
 def s3():
+
+	s3 = boto3.client('s3', aws_access_key_id=aws_id,
+    aws_secret_access_key=aws_key)
 
 	sport = str(request.args.get('sport'))
 	team = str(request.args.get('team'))
 	season = str(request.args.get('season'))
 	
-	return jsonify(get_s3_metadata(sport,season, team))
+	return jsonify(get_s3_metadata(s3,sport,season, team))
 
 @app.route('/get-all-teams')
 def get_team():
