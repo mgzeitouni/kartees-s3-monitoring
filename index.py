@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import json
 from functions.s3_functions import *
+from functions.teams import *
 import os
 import pdb
 import datetime
@@ -20,8 +21,18 @@ else:
 
 @app.route('/s3')
 def s3():
-	return get_bucket()
 
+	sport = str(request.args.get('sport'))
+	team = str(request.args.get('team'))
+	season = str(request.args.get('season'))
+	
+	return jsonify(get_s3_metadata(sport,season, team))
+
+@app.route('/get-all-teams')
+def get_team():
+
+	sport = request.args.get('sport')
+	return jsonify(get_all_teams(sport))
 
 @app.route('/')
 def home():
