@@ -65,6 +65,7 @@ def get_s3_metadata(sport, season, team):
 
 		print "Error with %s" %team
 		team_data_size['success']=False
+		
 		# print "%s - %s" %(team, team_data_size)
 
 	return team_data_size
