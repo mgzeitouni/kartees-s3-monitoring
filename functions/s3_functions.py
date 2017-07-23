@@ -32,8 +32,8 @@ def get_s3_metadata(s3, sport, season, team):
 	team_data_size = {}
 
 	team_data_size = {"team":team,
-					"current_time":get_timestamp(),
-					"current_date":get_date_obj(),
+					# "current_time":get_timestamp(),
+					# "current_date":get_date_obj(),
 				"total_kb_event_inventory":0.0,
 				"total_kb_event_metadata":0.0,
 				"total_kb_weather":0.0,
