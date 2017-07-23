@@ -1,0 +1,4 @@
+---
+applications:
+- name: kartees-s3-monitoring
+  memory: 128M
