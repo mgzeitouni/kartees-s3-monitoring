@@ -4,7 +4,6 @@ import datetime
 import pdb
 import smart_open
 from teams import *
-from credentials import *
 
 s3 = boto3.client('s3')
 
@@ -65,7 +64,7 @@ def get_s3_metadata(sport, season, team):
 
 		print "Error with %s" %team
 		team_data_size['success']=False
-		
+
 		# print "%s - %s" %(team, team_data_size)
 
 	return team_data_size
