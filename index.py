@@ -6,16 +6,17 @@ import os
 import pdb
 import datetime
 import boto3
+from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
 
 if 'VCAP_SERVICES' not in os.environ:
-	print 'Running on Local'
+	print ('Running on Local')
 	from functions.credentials import *
 	aws_id = AWS_ACCESS_KEY_ID
 	aws_key=AWS_SECRET_ACCESS_KEY
 else:
-	print 'Running on Bluemix'
+	print ('Running on Bluemix')
 	aws_id = os.getenv('AWS_ACCESS_KEY_ID')
 	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 
@@ -42,12 +43,33 @@ def get_team():
 def home():
     return "Hey there this is kartees-s3-monitoring python web server running on Bluemix. Time - %s" %datetime.datetime.now()
 
+def monitor_sizes():
+
+	return 2
+
+class Config(object):
+
+	JOBS = [{'id': 'consolidate totals',
+    'func': monitor_sizes,
+     'trigger': {
+		'type': 'cron',
+		'day_of_week': '*',
+		'hour': '*',
+		'minute': '0,30'}}]
+
+	SCHEDULER_API_ENABLED = True
+
+    	
 
 
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
 
 
+	app.config.from_object(Config())
 
+	scheduler = APScheduler()
+	scheduler.init_app(app)
+	scheduler.start()
 	app.run(host='0.0.0.0', port=int(port), debug=True)
 
