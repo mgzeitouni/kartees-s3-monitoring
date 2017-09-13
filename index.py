@@ -4,7 +4,7 @@ from functions.s3_functions import *
 from functions.teams import *
 import os
 import pdb
-import datetime
+# import datetime
 import boto3
 from flask_apscheduler import APScheduler
 import threading
@@ -108,8 +108,8 @@ class Config(object):
      'trigger': {
 		'type': 'cron',
 		'day_of_week': '*',
-		'hour': '16',
-		'minute': '0'}}]
+		'hour': '15',
+		'minute': '15'}}]
 
 	SCHEDULER_API_ENABLED = True
 
