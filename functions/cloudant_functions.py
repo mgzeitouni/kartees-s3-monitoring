@@ -1,4 +1,5 @@
 import time
+import datetime
 
 def write_doc(cloudant_client, data, sport):
 
