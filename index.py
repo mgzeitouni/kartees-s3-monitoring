@@ -32,6 +32,9 @@ else:
 	aws_id = os.getenv('AWS_ACCESS_KEY_ID')
 	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 	trigger = eval(os.getenv('trigger'))
+
+	vcap = json.loads(os.getenv('VCAP_SERVICES'))
+	
 	if 'cloudantNoSQLDB' in vcap:
 		creds = vcap['cloudantNoSQLDB'][0]['credentials']
 		user = creds['username']
