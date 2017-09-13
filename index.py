@@ -18,26 +18,26 @@ if 'VCAP_SERVICES' not in os.environ:
 	from functions.credentials import *
 	aws_id = AWS_ACCESS_KEY_ID
 	aws_key=AWS_SECRET_ACCESS_KEY
+	from functions.credentials import *
+	cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
+
+	trigger = {
+		'type': 'cron',
+		'day_of_week': '*',
+		'hour': '16',
+		'minute': '0'}
+
 else:
 	print ('Running on Bluemix')
 	aws_id = os.getenv('AWS_ACCESS_KEY_ID')
 	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-
-if 'VCAP_SERVICES' in os.environ:
-	vcap = json.loads(os.getenv('VCAP_SERVICES'))
-
-	print ('Found VCAP_SERVICES')
-
+	trigger = eval(os.getenv('trigger'))
 	if 'cloudantNoSQLDB' in vcap:
 		creds = vcap['cloudantNoSQLDB'][0]['credentials']
 		user = creds['username']
 		password = creds['password']
 		url = 'https://' + creds['host']
 		cloudant_client = Cloudant(user, password, url=url, connect=True)
-else:
-	from functions.credentials import *
-	cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
-
 
 
 global teams
@@ -105,11 +105,7 @@ class Config(object):
 
 	JOBS = [{'id': 'consolidate totals',
     'func': monitor_sizes,
-     'trigger': {
-		'type': 'cron',
-		'day_of_week': '*',
-		'hour': '15',
-		'minute': '15'}}]
+     'trigger': trigger}]
 
 	SCHEDULER_API_ENABLED = True
 
