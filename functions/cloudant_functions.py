@@ -14,7 +14,7 @@ def write_doc(cloudant_client, data, sport):
 	minute = date.minute
 	readable = date.strftime('%m-%d-%y, %H:%M:%S %p')
 
-	timestamp = int(date.strftime("%s")) * 1000
+	timestamp = "%s_%s_%s" %(year, month, day)
 	
 	document = {"_id":"new_%s_report_%s" %(sport,timestamp),
 				"time_collected":"%s_%s_%s_%s_%s" %(year, month, day, hour, minute),
