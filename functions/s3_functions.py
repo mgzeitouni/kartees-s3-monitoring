@@ -47,18 +47,23 @@ def get_s3_metadata(s3, sport, season, team):
 				"total_kb_weather":0.0}
 
 
-	paths = ["event_inventory", "event_metadata"]
+	paths = ["event_inventory", "event_metadata","weather"]
 
 	for path in paths:
 	    key_prefix = '%s/%s_%s_%s' %(path,sport, season, team.replace(" ","-"))
 	    print (key_prefix)
+
 	    for obj in bucket.objects.filter(Prefix=key_prefix):
+
+	    	try:
 
 	            key = obj.key
 	            size_kb = float(obj.size/1000)
-
-
 	            team_data_size["total_kb_%s"%path] += size_kb
+
+	        except:
+
+	        	print ("No data for: %s" %key_prefix)
 
 	print(team_data_size)
 
