@@ -2,8 +2,6 @@ import boto3
 import os
 import datetime
 import pdb
-import smart_open
-
 
 def get_all_teams(sport):
 
@@ -46,33 +44,24 @@ def get_s3_metadata(s3, sport, season, team):
 					# "current_date":get_date_obj(),
 				"total_kb_event_inventory":0.0,
 				"total_kb_event_metadata":0.0,
-				"total_kb_weather":0.0,
-				"success":True
-			}
+				"total_kb_weather":0.0}
 
-	try:
 
-		key_prefix = '%s/%s/%s' %(sport, season, team.replace(" ","-"))
+	paths = ["event_inventory", "event_metadata"]
 
-		for obj in bucket.objects.filter(Prefix=key_prefix):
+	for path in paths:
+	    key_prefix = '%s/%s_%s_%s' %(path,sport, season, team.replace(" ","-"))
+	    print (key_prefix)
+	    for obj in bucket.objects.filter(Prefix=key_prefix):
 
-			key = obj.key
-			size_kb = float(obj.size/1000)
-			# print "%s - %s" %(key, size_kb)
-			# pdb.set_trace()
+	            key = obj.key
+	            size_kb = float(obj.size/1000)
 
-			event = key.split("/")[3]
-			event_data_type = key.split("/")[4]
 
-			if event_data_type in ['event_inventory', 'event_metadata', 'weather']:
+	            team_data_size["total_kb_%s"%path] += size_kb
 
-				team_data_size["total_kb_%s"%event_data_type] += size_kb
+	print(team_data_size)
 
-	except:
 
-		print ("Error with %s") %team
-		team_data_size['success']=False
-
-		# print "%s - %s" %(team, team_data_size)
 
 	return team_data_size

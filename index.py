@@ -24,8 +24,8 @@ if 'VCAP_SERVICES' not in os.environ:
 	trigger = {
 		'type': 'cron',
 		'day_of_week': '*',
-		'hour': '16',
-		'minute': '0'}
+		'hour': '19',
+		'minute': '45'}
 
 else:
 	print ('Running on Bluemix')
