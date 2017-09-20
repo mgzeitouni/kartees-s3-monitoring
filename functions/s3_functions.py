@@ -56,14 +56,11 @@ def get_s3_metadata(s3, sport, season, team):
 	    for obj in bucket.objects.filter(Prefix=key_prefix):
 
 	    	try:
-
-	            key = obj.key
-	            size_kb = float(obj.size/1000)
-	            team_data_size["total_kb_%s"%path] += size_kb
-
-	        except:
-
-	        	print ("No data for: %s" %key_prefix)
+				key = obj.key
+				size_kb = float(obj.size/1000)
+				team_data_size["total_kb_%s"%path] += size_kb
+	    	except:
+				print ("No data for: %s" %key_prefix)
 
 	print(team_data_size)
 

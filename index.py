@@ -74,6 +74,17 @@ def get_team():
 def home():
     return "Hey there this is kartees-s3-monitoring python web server running on Bluemix. Time - %s" %datetime.datetime.now()
 
+@app.route('/section-to-category')
+def section_category():
+
+	section =int(request.args.get('section'))
+
+	section_map = {181979:0,
+					181981:1,
+					182157:2}
+
+	return str(section_map[section])
+ 	
 
 def worker(num, s3_client):
 
@@ -90,10 +101,9 @@ def worker(num, s3_client):
 	for team in all_teams:
 		
  		size_data.append(get_s3_metadata(s3_client,sport,season, team))
+	write_doc(cloudant_client,size_data, sport)
 
- 	write_doc(cloudant_client,size_data, sport)
 
- 	
 def monitor_sizes():
 	print ('running')
 	s3 = boto3.client('s3', aws_access_key_id=aws_id,aws_secret_access_key=aws_key)
