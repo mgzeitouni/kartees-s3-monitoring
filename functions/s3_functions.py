@@ -47,7 +47,7 @@ def get_s3_metadata(s3, sport, season, team):
 				"total_kb_weather":0.0}
 
 
-	paths = ["event_inventory", "event_metadata","weather"]
+	paths = ["event_inventory", "event_metadata","event_metadata_v2","weather"]
 
 	for path in paths:
 	    key_prefix = '%s/%s_%s_%s' %(path,sport, season, team.replace(" ","-"))
