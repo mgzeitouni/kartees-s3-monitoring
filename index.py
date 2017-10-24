@@ -23,6 +23,10 @@ teams['nba'] =["Atlanta Hawks","Boston Celtics","Brooklyn Nets","Charlotte Horne
 teams['nhl'] = ['Anaheim Ducks', 'Arizona Coyotes', 'Boston Bruins', 'Buffalo Sabres', 'Calgary Flames', 'Carolina Hurricanes', 'Chicago Blackhawks', 'Colorado Avalanche', 'Columbus Blue Jackets', 'Dallas Stars', 'Detroit Red Wings', 'Edmonton Oilers', 'Florida Panthers', 'Los Angeles Kings', 'Minnesota Wild', 'Montreal Canadiens', 'Nashville Predators', 'New Jersey Devils', 'New York Islanders', 'New York Rangers', 'Ottawa Senators', 'Philadelphia Flyers', 'Pittsburgh Penguins', 'San Jose Sharks', 'St. Louis Blues', 'Tampa Bay Lightning', 'Toronto Maple Leafs', 'Vancouver Canucks', 'Vegas Golden Knights', 'Washington Capitals', 'Winnipeg Jets']
 
 if 'VCAP_SERVICES' not in os.environ:
+	from functions.credentials import *
+	aws_id = AWS_ACCESS_KEY_ID
+	aws_key=AWS_SECRET_ACCESS_KEY
+
 	trigger = {
 	'type': 'cron',
 	'day_of_week': '*',
@@ -31,6 +35,9 @@ if 'VCAP_SERVICES' not in os.environ:
 
 else:
 	trigger = eval(os.getenv('trigger'))
+	aws_id = os.getenv('AWS_ACCESS_KEY_ID')
+	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+		
 
 @app.route('/get-sizes')
 def s3():
@@ -68,6 +75,8 @@ def section_category():
 
 def worker(num, s3_client):
 
+	print("Running worker %s" %num)
+
 	season = 2017
 
 	num_to_sport = {0:'mlb', 1:'nba', 2:'nhl'}
@@ -86,18 +95,11 @@ def worker(num, s3_client):
 
  	if 'VCAP_SERVICES' not in os.environ:
 		from functions.credentials import *
-		aws_id = AWS_ACCESS_KEY_ID
-		aws_key=AWS_SECRET_ACCESS_KEY
-		from functions.credentials import *
 		cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
 
 
 
 	else:
-
-		aws_id = os.getenv('AWS_ACCESS_KEY_ID')
-		aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-		
 
 		vcap = json.loads(os.getenv('VCAP_SERVICES'))
 		
