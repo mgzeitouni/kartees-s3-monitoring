@@ -22,6 +22,15 @@ teams['nba'] =["Atlanta Hawks","Boston Celtics","Brooklyn Nets","Charlotte Horne
 #teams['nfl'] = ['Arizona Cardinals', 'Atlanta Falcons', 'Baltimore Ravens', 'Buffalo Bills', 'Carolina Panthers', 'Chicago Bears', 'Cincinnati Bengals', 'Cleveland Browns', 'Dallas Cowboys', 'Denver Broncos', 'Detroit Lions', 'Green Bay Packers', 'Houston Texans', 'Indianapolis Colts', 'Jacksonville Jaguars', 'Kansas City Chiefs', 'Los Angeles Rams', 'Los Angeles Chargers', 'Miami Dolphins', 'Minnesota Vikings', 'New England Patriots', 'New Orleans Saints', 'New York Giants', 'New York Jets', 'Oakland Raiders', 'Philadelphia Eagles', 'Pittsburgh Steelers', 'San Francisco 49ers', 'Seattle Seahawks', 'Tampa Bay Buccaneers', 'Tennessee Titans', 'Washington Redskins']
 teams['nhl'] = ['Anaheim Ducks', 'Arizona Coyotes', 'Boston Bruins', 'Buffalo Sabres', 'Calgary Flames', 'Carolina Hurricanes', 'Chicago Blackhawks', 'Colorado Avalanche', 'Columbus Blue Jackets', 'Dallas Stars', 'Detroit Red Wings', 'Edmonton Oilers', 'Florida Panthers', 'Los Angeles Kings', 'Minnesota Wild', 'Montreal Canadiens', 'Nashville Predators', 'New Jersey Devils', 'New York Islanders', 'New York Rangers', 'Ottawa Senators', 'Philadelphia Flyers', 'Pittsburgh Penguins', 'San Jose Sharks', 'St. Louis Blues', 'Tampa Bay Lightning', 'Toronto Maple Leafs', 'Vancouver Canucks', 'Vegas Golden Knights', 'Washington Capitals', 'Winnipeg Jets']
 
+if 'VCAP_SERVICES' not in os.environ:
+	trigger = {
+	'type': 'cron',
+	'day_of_week': '*',
+	'hour': '3',
+	'minute': '15'}
+
+else:
+	trigger = eval(os.getenv('trigger'))
 
 @app.route('/get-sizes')
 def s3():
@@ -81,17 +90,13 @@ def worker(num, s3_client):
 		from functions.credentials import *
 		cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
 
-		trigger = {
-			'type': 'cron',
-			'day_of_week': '*',
-			'hour': '3',
-			'minute': '15'}
+
 
 	else:
 
 		aws_id = os.getenv('AWS_ACCESS_KEY_ID')
 		aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-		trigger = eval(os.getenv('trigger'))
+		
 
 		vcap = json.loads(os.getenv('VCAP_SERVICES'))
 		
