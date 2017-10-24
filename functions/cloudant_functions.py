@@ -29,5 +29,7 @@ def write_doc(cloudant_client, data, sport):
 				"minute":minute,
 				"data":data}
 
+	print("Created: %s"%document)
+
 	db.create_document(document)
 

@@ -52,7 +52,7 @@ def get_team():
 
 @app.route('/')
 def home():
-    return "Hey there this is kartees-s3-monitoring python web server running on Bluemix. Time - %s" %datetime.datetime.now()
+    return "Hey there this is kartees-s3-monitoring python web server running on Bluemix. Time - %s, Trigger running at %s" %(datetime.datetime.now(),trigger)
 
 @app.route('/section-to-category')
 def section_category():
@@ -80,6 +80,7 @@ def worker(num, s3_client):
 
 	for team in all_teams:
 		
+		print ("Collecting for %s"%team)
  		size_data.append(get_s3_metadata(s3_client,sport,season, team))
 
 
