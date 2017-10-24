@@ -13,35 +13,6 @@ from cloudant.client import Cloudant
 
 app = Flask(__name__)
 
-if 'VCAP_SERVICES' not in os.environ:
-	print ('Running on Local')
-	from functions.credentials import *
-	aws_id = AWS_ACCESS_KEY_ID
-	aws_key=AWS_SECRET_ACCESS_KEY
-	from functions.credentials import *
-	cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
-
-	trigger = {
-		'type': 'cron',
-		'day_of_week': '*',
-		'hour': '19',
-		'minute': '45'}
-
-else:
-	print ('Running on Bluemix')
-	aws_id = os.getenv('AWS_ACCESS_KEY_ID')
-	aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-	trigger = eval(os.getenv('trigger'))
-
-	vcap = json.loads(os.getenv('VCAP_SERVICES'))
-	
-	if 'cloudantNoSQLDB' in vcap:
-		creds = vcap['cloudantNoSQLDB'][0]['credentials']
-		user = creds['username']
-		password = creds['password']
-		url = 'https://' + creds['host']
-		cloudant_client = Cloudant(user, password, url=url, connect=True)
-
 
 global teams
 teams = {"mlb":[],"nba":[],"nhl":[]}
@@ -101,11 +72,42 @@ def worker(num, s3_client):
 	for team in all_teams:
 		
  		size_data.append(get_s3_metadata(s3_client,sport,season, team))
+
+
+ 	if 'VCAP_SERVICES' not in os.environ:
+		from functions.credentials import *
+		aws_id = AWS_ACCESS_KEY_ID
+		aws_key=AWS_SECRET_ACCESS_KEY
+		from functions.credentials import *
+		cloudant_client = Cloudant(CLOUDANT['username'], CLOUDANT['password'], url=CLOUDANT['url'],connect=True,auto_renew=True)
+
+		trigger = {
+			'type': 'cron',
+			'day_of_week': '*',
+			'hour': '3',
+			'minute': '15'}
+
+	else:
+
+		aws_id = os.getenv('AWS_ACCESS_KEY_ID')
+		aws_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+		trigger = eval(os.getenv('trigger'))
+
+		vcap = json.loads(os.getenv('VCAP_SERVICES'))
+		
+		if 'cloudantNoSQLDB' in vcap:
+			creds = vcap['cloudantNoSQLDB'][0]['credentials']
+			user = creds['username']
+			password = creds['password']
+			url = 'https://' + creds['host']
+			cloudant_client = Cloudant(user, password, url=url, connect=True)
+
+
 	write_doc(cloudant_client,size_data, sport)
 
 
 def monitor_sizes():
-	print ('running')
+	print ('Cron running-------------------')
 	s3 = boto3.client('s3', aws_access_key_id=aws_id,aws_secret_access_key=aws_key)
 
 	for i in range(3):
